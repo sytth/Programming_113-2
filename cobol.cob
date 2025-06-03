@@ -1,0 +1,197 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. STUDENT-FEE-CHECK.
+
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01  WS-STUDENT-ID         PIC 9(9).
+       01  WS-STUDENT-NAME       PIC X(10).
+       01  WS-PAYMENT-TYPE       PIC X.
+       01  WS-FEE                PIC 9(5) VALUE 0.
+       01  WS-PAID-AMOUNT        PIC 9(5) VALUE 0.
+       01  WS-REQUIRED-AMOUNT    PIC 9(5) VALUE 0.
+       01  WS-SHORT-AMOUNT       PIC 9(5) VALUE 0.
+       01  WS-TOTAL-RECEIVED     PIC 9(9) VALUE 0.
+       01  WS-I                  PIC 99 VALUE 1.
+       01  WS-J                  PIC 99 VALUE 1.
+       01  MAX-STUDENTS          PIC 99 VALUE 18.
+       01  MAX-FEES              PIC 99 VALUE 12.
+
+       01  STUDENT-TABLE.
+           05 STUDENT-ENTRY OCCURS 18 TIMES.
+              10 STUDENT-ID        PIC 9(9).
+              10 STUDENT-NAME      PIC X(10).
+              10 STUDENT-TYPE      PIC X.
+
+       01  FEES-TABLE.
+           05 FEES-ENTRY OCCURS 12 TIMES.
+              10 FEE-STUDENT-ID    PIC 9(9).
+              10 FEE-AMOUNT        PIC 9(5).
+
+       01  PAYMENT-TYPE-TABLE.
+           05 PAYMENT-ENTRY OCCURS 3 TIMES.
+              10 PAYMENT-TYPE-CODE  PIC X.
+              10 PAYMENT-AMOUNT     PIC 9(5).
+
+       PROCEDURE DIVISION.
+       MAIN-PROGRAM.
+
+           DISPLAY "=== STUDENT PAYMENT SUMMARY ===".
+
+           PERFORM INITIALIZE-DATA.
+
+           PERFORM VARYING WS-I FROM 1 BY 1 UNTIL WS-I > MAX-STUDENTS
+               MOVE STUDENT-ID(WS-I)    TO WS-STUDENT-ID
+               MOVE STUDENT-NAME(WS-I)  TO WS-STUDENT-NAME
+               MOVE STUDENT-TYPE(WS-I)  TO WS-PAYMENT-TYPE
+
+               PERFORM GET-PAYMENT-AMOUNT
+               PERFORM GET-PAID-AMOUNT
+
+               ADD WS-PAID-AMOUNT TO WS-TOTAL-RECEIVED
+
+               IF WS-PAID-AMOUNT < WS-REQUIRED-AMOUNT THEN
+                   COMPUTE WS-SHORT-AMOUNT = WS-REQUIRED-AMOUNT
+                       - WS-PAID-AMOUNT
+                   DISPLAY WS-STUDENT-ID " " WS-STUDENT-NAME
+                           " : " WS-SHORT-AMOUNT
+           END-IF
+
+           END-PERFORM
+           
+           DISPLAY "TOTAL: "
+                   WS-TOTAL-RECEIVED
+
+           STOP RUN.
+
+       INITIALIZE-DATA.
+           MOVE 920121001 TO STUDENT-ID(1)
+           MOVE "Andy     " TO STUDENT-NAME(1)
+           MOVE "A" TO STUDENT-TYPE(1)
+
+           MOVE 920121002 TO STUDENT-ID(2)
+           MOVE "Bob      " TO STUDENT-NAME(2)
+           MOVE "B" TO STUDENT-TYPE(2)
+
+           MOVE 920121003 TO STUDENT-ID(3)
+           MOVE "Cecil    " TO STUDENT-NAME(3)
+           MOVE "C" TO STUDENT-TYPE(3)
+
+           MOVE 920121004 TO STUDENT-ID(4)
+           MOVE "Dennis   " TO STUDENT-NAME(4)
+           MOVE "A" TO STUDENT-TYPE(4)
+
+           MOVE 920121005 TO STUDENT-ID(5)
+           MOVE "Edward   " TO STUDENT-NAME(5)
+           MOVE "B" TO STUDENT-TYPE(5)
+
+           MOVE 920121006 TO STUDENT-ID(6)
+           MOVE "Felix    " TO STUDENT-NAME(6)
+           MOVE "C" TO STUDENT-TYPE(6)
+
+           MOVE 920121007 TO STUDENT-ID(7)
+           MOVE "Gigi     " TO STUDENT-NAME(7)
+           MOVE "B" TO STUDENT-TYPE(7)
+
+           MOVE 920121008 TO STUDENT-ID(8)
+           MOVE "Helen    " TO STUDENT-NAME(8)
+           MOVE "B" TO STUDENT-TYPE(8)
+
+           MOVE 920121009 TO STUDENT-ID(9)
+           MOVE "Iris     " TO STUDENT-NAME(9)
+           MOVE "B" TO STUDENT-TYPE(9)
+
+           MOVE 920121010 TO STUDENT-ID(10)
+           MOVE "Jane     " TO STUDENT-NAME(10)
+           MOVE "A" TO STUDENT-TYPE(10)
+
+           MOVE 920121011 TO STUDENT-ID(11)
+           MOVE "Kate     " TO STUDENT-NAME(11)
+           MOVE "B" TO STUDENT-TYPE(11)
+
+           MOVE 920121012 TO STUDENT-ID(12)
+           MOVE "Liz      " TO STUDENT-NAME(12)
+           MOVE "C" TO STUDENT-TYPE(12)
+
+           MOVE 920121013 TO STUDENT-ID(13)
+           MOVE "Martin   " TO STUDENT-NAME(13)
+           MOVE "A" TO STUDENT-TYPE(13)
+
+           MOVE 920121014 TO STUDENT-ID(14)
+           MOVE "Nancy    " TO STUDENT-NAME(14)
+           MOVE "B" TO STUDENT-TYPE(14)
+
+           MOVE 920121015 TO STUDENT-ID(15)
+           MOVE "Oscar    " TO STUDENT-NAME(15)
+           MOVE "C" TO STUDENT-TYPE(15)
+
+           MOVE 920121016 TO STUDENT-ID(16)
+           MOVE "Pattie   " TO STUDENT-NAME(16)
+           MOVE "B" TO STUDENT-TYPE(16)
+
+           MOVE 920121017 TO STUDENT-ID(17)
+           MOVE "Quinn    " TO STUDENT-NAME(17)
+           MOVE "B" TO STUDENT-TYPE(17)
+
+           MOVE 920121018 TO STUDENT-ID(18)
+           MOVE "Rebecca  " TO STUDENT-NAME(18)
+           MOVE "B" TO STUDENT-TYPE(18)
+
+           MOVE 920121005 TO FEE-STUDENT-ID(1)
+           MOVE 21345 TO FEE-AMOUNT(1)
+
+           MOVE 920121009 TO FEE-STUDENT-ID(2)
+           MOVE 21345 TO FEE-AMOUNT(2)
+
+           MOVE 920121003 TO FEE-STUDENT-ID(3)
+           MOVE 42690 TO FEE-AMOUNT(3)
+
+           MOVE 920121017 TO FEE-STUDENT-ID(4)
+           MOVE 21345 TO FEE-AMOUNT(4)
+
+           MOVE 920121012 TO FEE-STUDENT-ID(5)
+           MOVE 21345 TO FEE-AMOUNT(5)
+
+           MOVE 920121002 TO FEE-STUDENT-ID(6)
+           MOVE 21345 TO FEE-AMOUNT(6)
+
+           MOVE 920121014 TO FEE-STUDENT-ID(7)
+           MOVE 15000 TO FEE-AMOUNT(7)
+
+           MOVE 920121018 TO FEE-STUDENT-ID(8)
+           MOVE 21345 TO FEE-AMOUNT(8)
+
+           MOVE 920121011 TO FEE-STUDENT-ID(9)
+           MOVE 20000 TO FEE-AMOUNT(9)
+
+           MOVE 920121006 TO FEE-STUDENT-ID(10)
+           MOVE 42690 TO FEE-AMOUNT(10)
+
+           MOVE 920121015 TO FEE-STUDENT-ID(11)
+           MOVE 21345 TO FEE-AMOUNT(11)
+
+           MOVE 920121008 TO FEE-STUDENT-ID(12)
+           MOVE 10000 TO FEE-AMOUNT(12)
+
+           MOVE "A" TO PAYMENT-TYPE-CODE(1)
+           MOVE 00000 TO PAYMENT-AMOUNT(1)
+
+           MOVE "B" TO PAYMENT-TYPE-CODE(2)
+           MOVE 21345 TO PAYMENT-AMOUNT(2)
+
+           MOVE "C" TO PAYMENT-TYPE-CODE(3)
+           MOVE 42690 TO PAYMENT-AMOUNT(3).
+
+       GET-PAYMENT-AMOUNT.
+           PERFORM VARYING WS-J FROM 1 BY 1 UNTIL WS-J > 3
+               IF PAYMENT-TYPE-CODE(WS-J) = WS-PAYMENT-TYPE THEN
+                   MOVE PAYMENT-AMOUNT(WS-J) TO WS-REQUIRED-AMOUNT
+               END-IF
+           END-PERFORM.
+
+       GET-PAID-AMOUNT.
+           MOVE 0 TO WS-PAID-AMOUNT
+           PERFORM VARYING WS-J FROM 1 BY 1 UNTIL WS-J > MAX-FEES
+               IF FEE-STUDENT-ID(WS-J) = WS-STUDENT-ID THEN
+                   MOVE FEE-AMOUNT(WS-J) TO WS-PAID-AMOUNT
+               END-IF
+           END-PERFORM.
