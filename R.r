@@ -3,29 +3,27 @@ Student_Main <- read.csv("C:/Users/Satellite/OneDrive/Programming_113-2/data/Stu
 Fees <- read.csv("C:/Users/Satellite/OneDrive/Programming_113-2/data/Fees.csv", header = TRUE, stringsAsFactors = FALSE)
 Student_Payment <- read.csv("C:/Users/Satellite/OneDrive/Programming_113-2/data/Student_Payment.csv", header = TRUE, stringsAsFactors = FALSE)
 
-# 用 merge 合併 Student_Main 和 Fees（左連接）
+# 用 merge 合併 Student_Main 和 Student_Payment（左連接）
 df <- merge(Student_Main, Student_Payment, by = "StudentID", all.x = TRUE)
 
 # NA 補 0 (沒繳費視為 0)
 df$AmountPaid[is.na(df$AmountPaid)] <- 0
 
-# 再合併 Student_Payment 取得應繳金額
+# 再合併 Fees 取得應繳金額
 df <- merge(df, Fees, by = "PaymentType", all.x = TRUE)
 
-# 重命名方便理解
 names(df)[names(df) == "Amount"] <- "RequiredAmount"
 
+## 移除字串中的逗號
 df$RequiredAmount <- gsub(",", "", df$RequiredAmount)
 df$AmountPaid <- gsub(",", "", df$AmountPaid)
+
+## 轉成數字
 df$RequiredAmount <- as.numeric(df$RequiredAmount)
 df$AmountPaid <- as.numeric(df$AmountPaid)
 
-
-print(df)
-
 typeof(df$AmountPaid)
 typeof(df$RequiredAmount)
-
 
 # 計算 #1：繳費截止日前已繳總金額
 total_received <- sum(df$AmountPaid, na.rm = TRUE)

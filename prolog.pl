@@ -29,7 +29,7 @@ parent_fact(oscar, pattie).
 parent_fact(pattie, quinn).
 parent_fact(quinn, rebecca).
 
-% Relation #1: 父母關係推論 (避免無限遞迴)
+% Relation #1: 父母關係推論
 parent(X, Y) :- parent_fact(X, Y).
 parent(Y, Z) :- married(X, Y), parent_fact(X, Z).
 

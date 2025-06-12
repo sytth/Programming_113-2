@@ -3,14 +3,14 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  WS-STUDENT-ID         PIC 9(9).
-       01  WS-STUDENT-NAME       PIC X(10).
-       01  WS-PAYMENT-TYPE       PIC X.
-       01  WS-FEE                PIC 9(5) VALUE 0.
-       01  WS-PAID-AMOUNT        PIC 9(5) VALUE 0.
-       01  WS-REQUIRED-AMOUNT    PIC 9(5) VALUE 0.
-       01  WS-SHORT-AMOUNT       PIC 9(5) VALUE 0.
-       01  WS-TOTAL-RECEIVED     PIC 9(9) VALUE 0.
+       01  WS-STUDENT-ID         PIC 9(9).              * 暫存學生編號
+       01  WS-STUDENT-NAME       PIC X(10).             * 暫存學生姓名
+       01  WS-PAYMENT-TYPE       PIC X.                 * 學生類型 A/B/C
+       01  WS-FEE                PIC 9(5) VALUE 0.      * 暫存單筆費用
+       01  WS-PAID-AMOUNT        PIC 9(5) VALUE 0.      * 該學生實際繳款
+       01  WS-REQUIRED-AMOUNT    PIC 9(5) VALUE 0.      * 應繳金額（根據類
+       01  WS-SHORT-AMOUNT       PIC 9(5) VALUE 0.      * 少繳金額
+       01  WS-TOTAL-RECEIVED     PIC 9(9) VALUE 0.      * 所有學生繳交的總金額
        01  WS-I                  PIC 99 VALUE 1.
        01  WS-J                  PIC 99 VALUE 1.
        01  MAX-STUDENTS          PIC 99 VALUE 18.
@@ -39,7 +39,7 @@
 
            PERFORM INITIALIZE-DATA.
 
-           PERFORM VARYING WS-I FROM 1 BY 1 UNTIL WS-I > MAX-STUDENTS
+           PERFORM VARYING WS-I FROM 1 BY 1 UNTIL WS-I > MAX-STUDENTS  * 載入學生與費用資料
                MOVE STUDENT-ID(WS-I)    TO WS-STUDENT-ID
                MOVE STUDENT-NAME(WS-I)  TO WS-STUDENT-NAME
                MOVE STUDENT-TYPE(WS-I)  TO WS-PAYMENT-TYPE
