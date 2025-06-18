@@ -68,31 +68,29 @@ fun cousins x =
 
 fun isCousin (x, y) = List.exists (fn c => c = y) (cousins x);
 
-fun relationship (x, y) =
-    if isSibling(x, y) then
-        case (genderOf x, genderOf y) of
-            (SOME Male, SOME Male) => x ^ " and " ^ y ^ " are brothers"
-          | (SOME Female, SOME Female) => x ^ " and " ^ y ^ " are sisters"
-          | _ => x ^ " and " ^ y ^ " are siblings"
-    else if isCousin(x, y) then
-        x ^ " and " ^ y ^ " are cousins"
-    else if List.exists (fn p => p = x) (parentsOf y) then
-        x ^ " is a parent of " ^ y
-    else if List.exists (fn p => p = y) (parentsOf x) then
-        y ^ " is a parent of " ^ x
-    else if isMarried(x, y) then
-        x ^ " and " ^ y ^ " are married"
-    else
-        "No direct relation found between " ^ x ^ " and " ^ y;
+(* check *)
+fun checkRelation (x, y, relation) =
+    case relation of
+        "sibling" => if isSibling(x, y) then "Yes, they are siblings\n" else "No, they are not siblings\n"
+      | "brother" => if isBrother(x, y) then "Yes, they are brothers\n" else "No, they are not brothers\n"
+      | "sister" => if isSister(x, y) then "Yes, they are sisters\n" else "No, they are not sisters\n"
+      | "cousin" => if isCousin(x, y) then "Yes, they are cousins\n" else "No, they are not cousins\n"
+      | "parent" => if List.exists (fn p => p = x) (parentsOf y) then "Yes, " ^ x ^ " is a parent of " ^ y ^ "\n" else "No, " ^ x ^ " is not a parent of " ^ y ^ "\n"
+      | "child" => if List.exists (fn p => p = y) (parentsOf x) then "Yes, " ^ x ^ " is a child of " ^ y ^ "\n" else "No, " ^ x ^ " is not a child of " ^ y ^ "\n"
+      | "married" => if isMarried(x, y) then "Yes, " ^ x ^ " and " ^ y ^ " are married\n" else "No, " ^ x ^ " and " ^ y ^ " are not married\n"
+      | _ => "Unknown relationship type: " ^ relation ^ "\n";
 
-val testPairs = [
-    ("Bob", "Helen"),
-    ("Cecil", "Dennis"),
-    ("Liz", "Rebecca"),
-    ("Edward", "Quinn"),
-    ("Felix", "Iris"),
-    ("Andy", "Bob"),
-    ("Gigi", "Martin")
+(* 測資 *)
+val testCases = [
+    ("Bob", "Helen", "married"),
+    ("Cecil", "Dennis", "sibling"),
+    ("Liz", "Rebecca", "sister"),
+    ("Edward", "Quinn", "parent"),
+    ("Felix", "Iris", "cousin"),
+    ("Andy", "Bob", "parent"),
+    ("Gigi", "Martin", "married"),
+    ("Helen", "Gigi", "sibling"),
+    ("Bob", "Andy", "child")
 ];
 
-val _ = List.app (fn (a,b) => print (relationship(a,b) ^ "\n")) testPairs;
+val _ = List.app (fn (a,b,rel) => print (checkRelation(a,b,rel))) testCases;
